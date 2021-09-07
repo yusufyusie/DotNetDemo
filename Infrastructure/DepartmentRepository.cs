@@ -15,9 +15,7 @@ namespace Infrastructure
         }
         public int Create(Department department)
         {
-            //validate data  using fluent validation 
-            //error
-            //succcess
+           
             _dbContext.Departments.Add(department);
              _dbContext.SaveChanges();
             return department.DepartmentId;
