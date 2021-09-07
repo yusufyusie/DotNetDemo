@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using DataModel;
+using DataModel.common;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace API.Controllers
             return _employeeService.GetAll();
         }
         [HttpPost]
-        public int Create(Employee employee)
+        public ResponseModel<Employee> Create(Employee employee)
         {
             return _employeeService.Create(employee);
         }

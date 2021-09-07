@@ -2,6 +2,8 @@
 using DataModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 namespace Infrastructure
 {
     public class DepartmentRepository : IDepartment
@@ -13,9 +15,7 @@ namespace Infrastructure
         }
         public int Create(Department department)
         {
-            //validate data  using fluent validation 
-            //error
-            //succcess
+           
             _dbContext.Departments.Add(department);
              _dbContext.SaveChanges();
             return department.DepartmentId;
@@ -33,7 +33,8 @@ namespace Infrastructure
 
         public List<Department> GetAll()
         {
-            throw new NotImplementedException();
+            return _dbContext.Departments.ToList();
+
         }
 
         public int Update(int id, Department department)

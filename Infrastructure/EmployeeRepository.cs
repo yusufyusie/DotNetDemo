@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using DataModel;
+using DataModel.common;
 using Infrastructure.Validators;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -16,14 +17,32 @@ namespace Infrastructure
             _dbContext = dbContext;
             _employeeValidator = new EmployeeValidator(_dbContext);   
         }
-        public int Create(Employee employee)
+        public ResponseModel<Employee> Create(Employee employee)
         {
-            var result= _employeeValidator.Validate(employee);
+            var response = new ResponseModel<Employee>();
+            var result = _employeeValidator.Validate(employee);
             if (!result.IsValid)
-                return 0;
+            {
+                response.TotalCount = 0; response.Success = false;
+                response.Error = new ErrorModel()
+                {
+                    ErrorCode = 0, ErrorDescription = "Please fix validation errors",
+                    ErrorMessage = result.Errors[0].ErrorMessage
+                };
+                return response;
+            }
            _dbContext.Add(employee);
            _dbContext.SaveChanges();
-           return employee.Id;
+
+            response.Success=true; 
+            response.Error = null;
+            response.TotalCount = 1;
+            response.Data = new List<Employee>()
+            {
+                Get(employee.Id)
+            };
+            return response;
+
         }
 
         public bool Delete(int id)

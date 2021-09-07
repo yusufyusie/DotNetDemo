@@ -26,5 +26,11 @@ namespace API.Controllers
             return _departmentService.Create(department);
         }
 
+        [HttpGet]
+        public List<Department> GetAll( )
+        {
+            return _departmentService.GetAll();
+        }
+
     }
 }
