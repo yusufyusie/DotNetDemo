@@ -2,6 +2,8 @@
 using DataModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 namespace Infrastructure
 {
     public class DepartmentRepository : IDepartment
@@ -33,7 +35,8 @@ namespace Infrastructure
 
         public List<Department> GetAll()
         {
-            throw new NotImplementedException();
+            return _dbContext.Departments.ToList();
+
         }
 
         public int Update(int id, Department department)
