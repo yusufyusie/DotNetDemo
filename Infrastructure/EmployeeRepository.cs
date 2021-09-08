@@ -45,9 +45,21 @@ namespace Infrastructure
 
         }
 
-        public bool Delete(int id)
+        public ResponseModel<Employee> Delete(int id)
         {
-            throw new System.NotImplementedException();
+            var existing = _dbContext.Employees.Find(id);
+            if (existing!= null)
+            {
+                _dbContext.Employees.Remove(existing);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            return false;
+
+            //var existing = _dbContext.Employees.Find(id);
+            //_dbContext.Employees.Remove(existing);
+            //_dbContext.SaveChanges();
+            //return true;
         }
 
         public Employee Get(int id)
