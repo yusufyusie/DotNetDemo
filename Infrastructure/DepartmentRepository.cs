@@ -23,7 +23,10 @@ namespace Infrastructure
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var existing = _dbContext.Departments.Find(id);       
+                _dbContext.Departments.Remove(existing);
+                _dbContext.SaveChanges();
+                return true;
         }
 
         public Department Get(int id)
