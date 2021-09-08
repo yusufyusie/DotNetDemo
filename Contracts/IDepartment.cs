@@ -13,6 +13,6 @@ namespace Contracts
         
         public ResponseModel<Department> GetAll();
         public Department Get(int id);  
-        public bool Delete(int id);  
+        public ResponseModel<Department> Delete(int id);  
     }
 }
