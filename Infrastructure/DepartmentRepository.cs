@@ -37,9 +37,17 @@ namespace Infrastructure
 
         }
 
-        public int Update(int id, Department department)
+        public bool Update(int id, Department department)
         {
-            throw new NotImplementedException();
+            Department oldData = _dbContext.Departments.Find(id);
+            if (oldData is null)
+            {
+                return false;
+            }
+            oldData.DepartmentName = department.DepartmentName;
+            _dbContext.Update(oldData);
+             _dbContext.SaveChangesAsync();
+            return true;
         }
     }
 }
