@@ -29,7 +29,9 @@ namespace Infrastructure
 
         public Department Get(int id)
         {
-            throw new NotImplementedException();
+            return _dbContext.Departments.Where(x=>x.DepartmentId==id).FirstOrDefault();
+             
+
         }
 
         public List<Department> GetAll()
