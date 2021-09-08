@@ -29,9 +29,7 @@ namespace Infrastructure
         public Department Get(int id)
         {
             return _dbContext.Departments.Where(x=>x.DepartmentId==id).FirstOrDefault();
-             
-
-        }
+                    }
 
         public List<Department> GetAll()
         {
