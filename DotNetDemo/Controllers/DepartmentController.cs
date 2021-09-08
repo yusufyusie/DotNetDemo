@@ -17,6 +17,7 @@ namespace API.Controllers
 
         public DepartmentController(IDepartment departmentService)
         {
+
              _departmentService= departmentService;
         }
 
