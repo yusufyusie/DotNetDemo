@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using DataModel;
+using DataModel.common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,21 +22,41 @@ namespace Infrastructure
         }
                 public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            var existing = _dbContext.Departments.Find(id);       
+                _dbContext.Departments.Remove(existing);
+                _dbContext.SaveChanges();
+                return true;
         }
 
         public Department Get(int id)
         {
             return _dbContext.Departments.Where(x=>x.DepartmentId==id).FirstOrDefault();
-                    }
-                public List<Department> GetAll()
-        {
-            return _dbContext.Departments.ToList();
+             
 
+        }
+
+        public ResponseModel<Department> GetAll()
+        {
+            return new ResponseModel<Department>()
+            {
+                Data = _dbContext.Departments.ToList(),
+                Success = true,
+                Error= null,
+                TotalCount = _dbContext.Departments.Count()
+           };
+          
         }
                 public int Update(int id, Department department)
         {
-            throw new NotImplementedException();
+            Department oldData = _dbContext.Departments.Find(id);
+            if (oldData is null)
+            {
+                return 0;
+            }
+            oldData.DepartmentName = department.DepartmentName;
+            _dbContext.Update(oldData);
+             _dbContext.SaveChangesAsync();
+            return 1;
         }
     }
 }
