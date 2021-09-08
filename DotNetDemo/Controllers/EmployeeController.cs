@@ -24,6 +24,7 @@ namespace API.Controllers
         [HttpPost]
         public ResponseModel<Employee> Create(Employee employee)
         {
+
             return _employeeService.Create(employee);
         }
         [HttpPut]
