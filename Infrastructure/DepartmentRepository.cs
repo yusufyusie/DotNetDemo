@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using DataModel;
+using DataModel.common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +35,16 @@ namespace Infrastructure
 
         }
 
-        public List<Department> GetAll()
+        public ResponseModel<Department> GetAll()
         {
-            return _dbContext.Departments.ToList();
-
+            return new ResponseModel<Department>()
+            {
+                Data = _dbContext.Departments.ToList(),
+                Success = true,
+                Error= null,
+                TotalCount = _dbContext.Departments.Count()
+           };
+          
         }
 
         public int Update(int id, Department department)
