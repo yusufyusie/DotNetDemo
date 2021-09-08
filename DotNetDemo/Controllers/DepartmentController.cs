@@ -1,11 +1,7 @@
 ﻿using Contracts;
 using DataModel;
-using Microsoft.AspNetCore.Http;
+using DataModel.common;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -28,7 +24,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public List<Department> GetAll( )
+        public ResponseModel<Department> GetAll( )
         {
             return _departmentService.GetAll();
         }

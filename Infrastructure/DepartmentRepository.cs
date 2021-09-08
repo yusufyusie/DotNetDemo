@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using DataModel;
+using DataModel.common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,18 +32,34 @@ namespace Infrastructure
 
         public Department Get(int id)
         {
-            throw new NotImplementedException();
+            return _dbContext.Departments.Where(x=>x.DepartmentId==id).FirstOrDefault();
+             
+
         }
 
-        public List<Department> GetAll()
+        public ResponseModel<Department> GetAll()
         {
-            return _dbContext.Departments.ToList();
-
+            return new ResponseModel<Department>()
+            {
+                Data = _dbContext.Departments.ToList(),
+                Success = true,
+                Error= null,
+                TotalCount = _dbContext.Departments.Count()
+           };
+          
         }
 
         public int Update(int id, Department department)
         {
-            throw new NotImplementedException();
+            Department oldData = _dbContext.Departments.Find(id);
+            if (oldData is null)
+            {
+                return 0;
+            }
+            oldData.DepartmentName = department.DepartmentName;
+            _dbContext.Update(oldData);
+             _dbContext.SaveChangesAsync();
+            return 1;
         }
     }
 }
