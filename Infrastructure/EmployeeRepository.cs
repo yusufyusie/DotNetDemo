@@ -22,8 +22,10 @@ namespace Infrastructure
             var response = new ResponseModel<Employee>();
             var result = _employeeValidator.Validate(employee);
             if (!result.IsValid)
+           
             {
-                response.TotalCount = 0; response.Success = false;
+                response.TotalCount = 0; 
+                response.Success = false;
                 response.Error = new ErrorModel()
                 {
                     ErrorCode = 0, ErrorDescription = "Please fix validation errors",
@@ -45,10 +47,37 @@ namespace Infrastructure
 
         }
 
-        public bool Delete(int id)
+        public ResponseModel<Employee> Delete(int id)
         {
-            throw new System.NotImplementedException();
+            var existing = _dbContext.Employees.Find(id);
+            if (existing!= null)
+            {
+                _dbContext.Employees.Remove(existing);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            return false;
+
+            //var existing = _dbContext.Employees.Find(id);
+            //_dbContext.Employees.Remove(existing);
+            //_dbContext.SaveChanges();
+            //return true;
         }
+
+        public ResponseModel<Employee> Get(int id)
+        {
+          var response = new ResponseModel<Employee>();
+            if (!_dbContext.Employees.Where(d => d.Id == id).Any())
+            {
+                response = new ResponseModel<Employee>()
+                {
+                    Data = null,
+                    Success = false,
+                    TotalCount = 0,
+                    Error = null
+                };
+                return response;
+            }
 
         public ResponseModel<Employee> Get(int id)
         {

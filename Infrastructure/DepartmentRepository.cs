@@ -1,5 +1,7 @@
 ﻿using Contracts;
 using DataModel;
+using DataModel.common;
+using Infrastructure.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,40 +11,70 @@ namespace Infrastructure
     public class DepartmentRepository : IDepartment
     {
         private readonly EmployeeDbContext _dbContext;
+        private readonly DepartmentValidator _departmentValidator;
         public DepartmentRepository(EmployeeDbContext dbContext)
         {
             _dbContext = dbContext;
+            _departmentValidator = new DepartmentValidator(_dbContext);
         }
         public int Create(Department department)
+
         {
-           
-            _dbContext.Departments.Add(department);
+             _dbContext.Departments.Add(department);
              _dbContext.SaveChanges();
             return department.DepartmentId;
         }
 
-        public bool Delete(int id)
+        public ResponseModel<Department> Delete(int id)
         {
-            var existing = _dbContext.Departments.Find(id);       
-                _dbContext.Departments.Remove(existing);
-                _dbContext.SaveChanges();
-                return true;
+            var response = new ResponseModel<Department>();
+            var oldData = Get(id);
+            if(oldData is null)
+            {
+                response.Success = false;
+                return response;
+
+            }
+            _dbContext.Departments.Remove(oldData);
+            _dbContext.SaveChanges();
+            response.Success = true;
+            response.Data = new List<Department>()
+            {
+                oldData
+            };
+            return response;
         }
 
+      
         public Department Get(int id)
         {
-            throw new NotImplementedException();
-        }
-
-        public List<Department> GetAll()
-        {
-            return _dbContext.Departments.ToList();
+            return _dbContext.Departments.Where(x=>x.DepartmentId==id).FirstOrDefault();
+             
 
         }
 
-        public int Update(int id, Department department)
+        public ResponseModel<Department> GetAll()
         {
-            throw new NotImplementedException();
+            return new ResponseModel<Department>()
+            {
+                Data = _dbContext.Departments.ToList(),
+                Success = true,
+                Error= null,
+                TotalCount = _dbContext.Departments.Count()
+           };
+          
+        }
+                public int Update(int id, Department department)
+        {
+            Department oldData = Get(id);
+            if (oldData is null)
+            {
+                return 0;
+            }
+            oldData.DepartmentName = department.DepartmentName;
+            _dbContext.Update(oldData);
+             _dbContext.SaveChangesAsync();
+            return 1;
         }
     }
 }

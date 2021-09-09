@@ -58,6 +58,8 @@ namespace DataModel.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.ToTable("Employees");
                 });
 
@@ -77,6 +79,17 @@ namespace DataModel.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("DataModel.Employee", b =>
+                {
+                    b.HasOne("DataModel.Department", "VDepartment")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("VDepartment");
                 });
 #pragma warning restore 612, 618
         }
