@@ -14,10 +14,11 @@ namespace Infrastructure
         private readonly EmployeeValidator _employeeValidator;
         public EmployeeRepository(EmployeeDbContext dbContext)
         {
+            //nnnnn
             _dbContext = dbContext;
             _employeeValidator = new EmployeeValidator(_dbContext);   
         }
-        public ResponseModel<Employee> Create(Employee employee)
+         public ResponseModel<Employee> Create(Employee employee)
         {
             var response = new ResponseModel<Employee>();
             var result = _employeeValidator.Validate(employee);
@@ -41,7 +42,7 @@ namespace Infrastructure
             response.TotalCount = 1;
             response.Data = new List<Employee>()
             {
-                Get(employee.Id)
+            _dbContext.Employees.Find(employee.Id)
             };
             return response;
 
@@ -66,7 +67,7 @@ namespace Infrastructure
 
         public ResponseModel<Employee> Get(int id)
         {
-          var response = new ResponseModel<Employee>();
+            var response = new ResponseModel<Employee>();
             if (!_dbContext.Employees.Where(d => d.Id == id).Any())
             {
                 response = new ResponseModel<Employee>()
