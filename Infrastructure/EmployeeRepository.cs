@@ -17,8 +17,7 @@ namespace Infrastructure
             _dbContext = dbContext;
             _employeeValidator = new EmployeeValidator(_dbContext);   
         }
-        //ghgh
-        public ResponseModel<Employee> Create(Employee employee)
+         public ResponseModel<Employee> Create(Employee employee)
         {
             var response = new ResponseModel<Employee>();
             var result = _employeeValidator.Validate(employee);
