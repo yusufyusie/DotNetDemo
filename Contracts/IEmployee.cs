@@ -9,7 +9,7 @@ namespace Contracts
     {
         public ResponseModel<Employee> Create(Employee employee);
         public List<Employee> GetAll();
-        public Employee Get(int id);
+        public ResponseModel<Employee> Get(int id);
         public Task<bool> Update(int id,Employee employee);
         public bool Delete(int id);
     }
