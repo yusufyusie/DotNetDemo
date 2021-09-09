@@ -13,7 +13,8 @@ namespace API.Controllers
 
         public DepartmentController(IDepartment departmentService)
         {
-             _departmentService= departmentService;
+
+            _departmentService= departmentService;
         }
 
         [HttpPost]
