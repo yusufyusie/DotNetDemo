@@ -1,6 +1,5 @@
 ﻿using DataModel;
 using DataModel.common;
-using System.Collections.Generic;
 
 namespace Contracts
 {
@@ -8,11 +7,9 @@ namespace Contracts
 
     {
         public int Create(Department department);  
-        public int Update(int id,Department department);
-        //  public  List<Department> GetAll();  
-        
+        public int Update(int id,Department department);        
         public ResponseModel<Department> GetAll();
         public Department Get(int id);  
-        public bool Delete(int id);  
+        public ResponseModel<Department> Delete(int id);  
     }
 }

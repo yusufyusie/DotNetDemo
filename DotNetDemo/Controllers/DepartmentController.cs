@@ -30,7 +30,7 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public bool Delete(int id)
+        public ResponseModel<Department> Delete(int id)
         {
             return _departmentService.Delete(id);
         }

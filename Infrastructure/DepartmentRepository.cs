@@ -22,12 +22,12 @@ namespace Infrastructure
             return department.DepartmentId;
         }
 
-        public bool Delete(int id)
+        public ResponseModel<Department> Delete(int id)
         {
             var existing = _dbContext.Departments.Find(id);       
                 _dbContext.Departments.Remove(existing);
                 _dbContext.SaveChanges();
-                return true;
+                return new ResponseModel<Department>();
         }
 
         public Department Get(int id)
