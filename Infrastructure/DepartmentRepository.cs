@@ -35,6 +35,7 @@ namespace Infrastructure
                 return response;
 
             }
+
             _dbContext.Departments.Remove(oldData);
             _dbContext.SaveChanges();
             response.Success = true;
