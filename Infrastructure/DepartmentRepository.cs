@@ -27,31 +27,21 @@ namespace Infrastructure
 
         public ResponseModel<Department> Delete(int id)
         {
-            //This needs to done by birhan
-            var oldData = _dbContext.Departments.Find(id);
-            Department department=Get(id);
-
             var response = new ResponseModel<Department>();
-            var result = _departmentValidator.Validate(department);
-            if (!result.IsValid)
+            var oldData = Get(id);
+            if(oldData is null)
             {
-                response.TotalCount = 0; response.Success = false;
-                response.Error = new ErrorModel()
-                {
-                    ErrorCode = 0,
-                    ErrorDescription = "Please fix validation errors",
-                    ErrorMessage = result.Errors[0].ErrorMessage
-                };
+                response.Success = false;
                 return response;
+
             }
-
-
             _dbContext.Departments.Remove(oldData);
             _dbContext.SaveChanges();
-
-
-
-
+            response.Success = true;
+            response.Data = new List<Department>()
+            {
+                oldData
+            };
             return response;
         }
 
@@ -77,7 +67,7 @@ namespace Infrastructure
 
         public int Update(int id, Department department)
         {
-            Department oldData = _dbContext.Departments.Find(id);
+            Department oldData = Get(id);
             if (oldData is null)
             {
                 return 0;
