@@ -66,21 +66,6 @@ namespace Infrastructure
 
         public ResponseModel<Employee> Get(int id)
         {
-          var response = new ResponseModel<Employee>();
-            if (!_dbContext.Employees.Where(d => d.Id == id).Any())
-            {
-                response = new ResponseModel<Employee>()
-                {
-                    Data = null,
-                    Success = false,
-                    TotalCount = 0,
-                    Error = null
-                };
-                return response;
-            }
-
-        public ResponseModel<Employee> Get(int id)
-        {
             var response = new ResponseModel<Employee>();
             if (!_dbContext.Employees.Where(d => d.Id == id).Any())
             {
