@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using DataModel;
 using DataModel.common;
+using Infrastructure.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,11 @@ namespace Infrastructure
     public class DepartmentRepository : IDepartment
     {
         private readonly EmployeeDbContext _dbContext;
+        private readonly DepartmentValidator _departmentValidator;
         public DepartmentRepository(EmployeeDbContext dbContext)
         {
             _dbContext = dbContext;
+            _departmentValidator = new DepartmentValidator(_dbContext);
         }
         public int Create(Department department)
 
@@ -21,14 +24,28 @@ namespace Infrastructure
              _dbContext.SaveChanges();
             return department.DepartmentId;
         }
-                public bool Delete(int id)
+
+        public ResponseModel<Department> Delete(int id)
         {
-            var existing = _dbContext.Departments.Find(id);       
-                _dbContext.Departments.Remove(existing);
-                _dbContext.SaveChanges();
-                return true;
+            var response = new ResponseModel<Department>();
+            var oldData = Get(id);
+            if(oldData is null)
+            {
+                response.Success = false;
+                return response;
+
+            }
+            _dbContext.Departments.Remove(oldData);
+            _dbContext.SaveChanges();
+            response.Success = true;
+            response.Data = new List<Department>()
+            {
+                oldData
+            };
+            return response;
         }
 
+      
         public Department Get(int id)
         {
             return _dbContext.Departments.Where(x=>x.DepartmentId==id).FirstOrDefault();
@@ -49,7 +66,7 @@ namespace Infrastructure
         }
                 public int Update(int id, Department department)
         {
-            Department oldData = _dbContext.Departments.Find(id);
+            Department oldData = Get(id);
             if (oldData is null)
             {
                 return 0;
