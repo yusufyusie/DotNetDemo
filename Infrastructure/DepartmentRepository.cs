@@ -45,11 +45,34 @@ namespace Infrastructure
             return response;
         }
 
-      
-        public Department Get(int id)
+
+        public ResponseModel<Department> Get(int id)
         {
-            return _dbContext.Departments.Where(x=>x.DepartmentId==id).FirstOrDefault();
-             
+            var response = new ResponseModel<Department>();
+            if (!_dbContext.Employees.Where(d => d.Id == id).Any())
+            {
+                response = new ResponseModel<Department>()
+                {
+                    Data = null,
+                    Success = false,
+                    TotalCount = 0,
+                    Error = null
+                };
+                return response;
+            }
+
+            response = new ResponseModel<Department>()
+            {
+                Data = new List<Department>()
+                {
+                   _dbContext.Departments.Find(id)
+                },
+                Success = true,
+                TotalCount = 1,
+                Error = null
+            };
+
+            return response;
 
         }
 
@@ -75,6 +98,11 @@ namespace Infrastructure
             _dbContext.Update(oldData);
              _dbContext.SaveChangesAsync();
             return 1;
+        }
+
+        ResponseModel<Department> IDepartment.Get(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

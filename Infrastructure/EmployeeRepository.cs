@@ -42,7 +42,7 @@ namespace Infrastructure
             response.TotalCount = 1;
             response.Data = new List<Employee>()
             {
-                Get(employee.Id)
+            _dbContext.Employees.Find(employee.Id)
             };
             return response;
 
