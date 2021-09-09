@@ -33,7 +33,10 @@ namespace API.Controllers
         {
             return await _employeeService.Update(id,employee);
         }
-
-        
+        [HttpDelete]
+        public ResponseModel<Employee> Delete(int id)
+        {
+            return _employeeService.Delete(id);
+        }
     }
 }
