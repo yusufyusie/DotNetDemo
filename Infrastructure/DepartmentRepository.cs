@@ -1,7 +1,6 @@
 ﻿using Contracts;
 using DataModel;
 using DataModel.common;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,10 +29,32 @@ namespace Infrastructure
                 return true;
         }
 
-        public Department Get(int id)
+        public ResponseModel<Department> Get(int id)
         {
-            return _dbContext.Departments.Where(x=>x.DepartmentId==id).FirstOrDefault();
-             
+            var response = new ResponseModel<Department>();
+            if (!_dbContext.Departments.Where(d => d.DepartmentId == id).Any())
+            {
+                response = new ResponseModel<Department>()
+                {
+                    Data = null,
+                    Success = false,
+                    TotalCount = 0,
+                    Error = null
+                };
+                return response;
+            }
+
+             response = new ResponseModel<Department>() { 
+                Data= new List<Department>()
+                {
+                   _dbContext.Departments.Find(id)
+                },
+               Success= true,
+               TotalCount= 1,
+               Error= null
+            };
+           
+           return response;
 
         }
 

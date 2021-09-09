@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataModel.Migrations
 {
     [DbContext(typeof(EmployeeDbContext))]
-    [Migration("20210901085103_InitalTableCreation")]
-    partial class InitalTableCreation
+    [Migration("20210909020057_teshale")]
+    partial class teshale
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,7 +60,38 @@ namespace DataModel.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("DataModel.Setting", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SettingName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SettingValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("DataModel.Employee", b =>
+                {
+                    b.HasOne("DataModel.Department", "VDepartment")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("VDepartment");
                 });
 #pragma warning restore 612, 618
         }

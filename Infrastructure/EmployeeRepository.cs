@@ -22,8 +22,10 @@ namespace Infrastructure
             var response = new ResponseModel<Employee>();
             var result = _employeeValidator.Validate(employee);
             if (!result.IsValid)
+           
             {
-                response.TotalCount = 0; response.Success = false;
+                response.TotalCount = 0; 
+                response.Success = false;
                 response.Error = new ErrorModel()
                 {
                     ErrorCode = 0, ErrorDescription = "Please fix validation errors",
@@ -50,10 +52,33 @@ namespace Infrastructure
             throw new System.NotImplementedException();
         }
 
-        public Employee Get(int id)
+        public ResponseModel<Employee> Get(int id)
         {
-          //  return _dbContext.Employees.Where(x=>x.Id==id).FirstOrDefault();
-          return _dbContext.Employees.FirstOrDefault(x => x.Id == id);
+          var response = new ResponseModel<Employee>();
+            if (!_dbContext.Employees.Where(d => d.Id == id).Any())
+            {
+                response = new ResponseModel<Employee>()
+                {
+                    Data = null,
+                    Success = false,
+                    TotalCount = 0,
+                    Error = null
+                };
+                return response;
+            }
+
+            response = new ResponseModel<Employee>()
+            {
+                Data = new List<Employee>()
+                {
+                   _dbContext.Employees.Find(id)
+                },
+                Success = true,
+                TotalCount = 1,
+                Error = null
+            };
+
+            return response;
 
         }
 
