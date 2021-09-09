@@ -29,9 +29,9 @@ namespace API.Controllers
         }
 
         [HttpDelete]
-        public ResponseModel<Department> Delete()
+        public ResponseModel<Department> Delete(int id)
         {
-            return _departmentService.GetAll();
+            return _departmentService.Delete( id);
         }
 
     }

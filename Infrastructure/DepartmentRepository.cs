@@ -31,11 +31,6 @@ namespace Infrastructure
             var oldData = _dbContext.Departments.Find(id);
             Department department=Get(id);
 
-            //  if (oldData == null) return false;
-
-
-
-
             var response = new ResponseModel<Department>();
             var result = _departmentValidator.Validate(department);
             if (!result.IsValid)
