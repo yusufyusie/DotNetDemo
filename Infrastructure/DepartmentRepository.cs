@@ -36,6 +36,12 @@ namespace Infrastructure
 
             }
 
+
+
+
+
+
+
             _dbContext.Departments.Remove(oldData);
             _dbContext.SaveChanges();
             response.Success = true;
@@ -45,7 +51,6 @@ namespace Infrastructure
             };
             return response;
         }
-
 
         public ResponseModel<Department> Get(int id)
         {
