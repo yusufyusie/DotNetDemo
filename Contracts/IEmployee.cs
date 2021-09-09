@@ -11,6 +11,6 @@ namespace Contracts
         public List<Employee> GetAll();
         public Employee Get(int id);
         public Task<bool> Update(int id,Employee employee);
-        public bool Delete(int id);
+        public ResponseModel<Employee> Delete(int id);
     }
 }
