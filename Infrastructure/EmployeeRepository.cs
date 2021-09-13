@@ -2,6 +2,7 @@
 using DataModel;
 using DataModel.common;
 using Infrastructure.Validators;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,19 +51,27 @@ namespace Infrastructure
 
         public ResponseModel<Employee> Delete(int id)
         {
+            var response = new ResponseModel<Employee>();
+
+            //TODO
             var existing = _dbContext.Employees.Find(id);
-            if (existing!= null)
+            if (existing is null)
             {
                 _dbContext.Employees.Remove(existing);
                 _dbContext.SaveChanges();
-                return true;
+                response.Success = false;
+                response.Error = new ErrorModel()
+                {
+                    ErrorCode= StatusCodes.Status404NotFound,
+                    ErrorDescription="Employee not found"
+                };
+                return response;
             }
-            return false;
-
-            //var existing = _dbContext.Employees.Find(id);
-            //_dbContext.Employees.Remove(existing);
-            //_dbContext.SaveChanges();
-            //return true;
+            var employee = _dbContext.Employees.Find(id);
+            response.Data = new List<Employee>();
+            response.Data.Add(employee);
+            response.Success = true;
+            return response;
         }
 
         public ResponseModel<Employee> Get(int id)
@@ -75,45 +84,60 @@ namespace Infrastructure
                     Data = null,
                     Success = false,
                     TotalCount = 0,
-                    Error = null
+                    Error = new ErrorModel()
+                    {
+                        ErrorCode= StatusCodes.Status404NotFound,
+                        ErrorDescription= "Employee not found",
+                        ErrorMessage="Employee with the given Id does not exist"
+                    }
                 };
                 return response;
             }
 
-            response = new ResponseModel<Employee>()
-            {
-                Data = new List<Employee>()
+            response.Data = new List<Employee>()
                 {
                    _dbContext.Employees.Find(id)
-                },
-                Success = true,
-                TotalCount = 1,
-                Error = null
-            };
+                };
+            response.Success = true;
+            response.TotalCount = 1;
+            response.Error = null;
 
             return response;
 
         }
 
-        public List<Employee> GetAll()
+        public ResponseModel<Employee> GetAll()
         {
-            return _dbContext.Employees
-                .Where(x=>x.Id>1)
-                .Include(x=>x.VDepartment)
-                .ToList();
+            var response = new ResponseModel<Employee>
+            {
+                Data = _dbContext.Employees
+                .Include(x => x.VDepartment)
+                .ToList()
+            };
+            response.Success = response.Data.Count > 0;
+           return response;
         }
 
-        public async Task<bool> Update(int id, Employee UpdatedData)
+        public async Task<ResponseModel<Employee>>  Update(int id, Employee UpdatedData)
         {
+            var response = new ResponseModel<Employee>();
+            //TODO
             Employee oldData =await _dbContext.Employees.FindAsync(id);
             if(oldData is null)
             {
-                return false;
+                response.Success = false;
+                response.Error = new ErrorModel() { ErrorDescription = "Employee not found", ErrorCode = StatusCodes.Status404NotFound };
+                return response;
             }
+
             oldData.DepartmentId= UpdatedData.DepartmentId;
             _dbContext.Update(oldData);
-           await _dbContext.SaveChangesAsync();
-            return true;
+            await _dbContext.SaveChangesAsync();
+            var employee= await _dbContext.Employees.FindAsync(id);
+            response.Success= true;
+            response.Data = new List<Employee>();
+            response.Data.Add(employee);
+            return response;
         }
     }
 }

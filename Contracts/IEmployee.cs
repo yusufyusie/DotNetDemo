@@ -8,9 +8,9 @@ namespace Contracts
   public interface IEmployee
     {
         public ResponseModel<Employee> Create(Employee employee);
-        public List<Employee> GetAll();
+        public ResponseModel<Employee> GetAll();
         public ResponseModel<Employee> Get(int id);
-        public Task<bool> Update(int id,Employee employee);
+        public Task<ResponseModel<Employee>> Update(int id,Employee employee);
         public ResponseModel<Employee> Delete(int id);
     }
 }

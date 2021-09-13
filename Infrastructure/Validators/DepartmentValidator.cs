@@ -1,6 +1,7 @@
 ﻿using DataModel;
 using FluentValidation;
 using System;
+using System.Linq;
 
 namespace Infrastructure.Validators
 {
@@ -16,13 +17,14 @@ namespace Infrastructure.Validators
         {
             _dbcontext = dbContext;
             RuleFor(x => x.DepartmentName).NotEmpty().NotNull()
-                .WithMessage("Department name cannot be null").Length(3, 25);
-            
-            
-
+                .WithMessage("Department name cannot be null").Length(3, 25)
+                .Must(BeUniqueName).WithMessage("Department name cannot be duplicated");
            
         }
 
-        
+        private bool BeUniqueName(string name)
+        {
+           return _dbcontext.Departments.Where(x=>x.DepartmentName==name).Any();
+        }
     }
 }

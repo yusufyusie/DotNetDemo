@@ -18,7 +18,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public int Create(Department department)
+        public ResponseModel<Department> Create(Department department)
         {
             return _departmentService.Create(department);
         }
@@ -33,6 +33,12 @@ namespace API.Controllers
         public ResponseModel<Department> Delete(int id)
         {
             return _departmentService.Delete( id);
+        }
+
+        [HttpPut]
+        public ResponseModel<Department> Update(int id, Department department)
+        {
+            return _departmentService.Update(id,department);
         }
 
     }
