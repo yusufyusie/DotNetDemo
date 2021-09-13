@@ -2,7 +2,7 @@
 using DataModel;
 using DataModel.common;
 using Infrastructure.Validators;
-using System;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,30 +17,42 @@ namespace Infrastructure
             _dbContext = dbContext;
             _departmentValidator = new DepartmentValidator(_dbContext);
         }
-        public int Create(Department department)
-
-        {
-             _dbContext.Departments.Add(department);
+        public ResponseModel<Department> Create(Department department){
+            var response=  new ResponseModel<Department>();
+            var validationResult = _departmentValidator.Validate(department);
+            if (!validationResult.IsValid)
+            {
+                response.Error = new ErrorModel()
+                {
+                    ErrorCode = 0,
+                    ErrorDescription = "We have found some validation errors",
+                    ErrorMessage = validationResult.Errors[0].ErrorMessage,
+                };
+                response.Success = false;
+                response.Data = null;
+               return response;
+            }
+ 
+            _dbContext.Departments.Add(department);
              _dbContext.SaveChanges();
-            return department.DepartmentId;
+            response.Data = new List<Department>();
+            response.Data.Add(department);
+            response.Success = true;
+            response.Error = null;
+            return response;
         }
 
         public ResponseModel<Department> Delete(int id)
         {
             var response = new ResponseModel<Department>();
-            var oldData = Get(id);
+            //TODO
+            var oldData = _dbContext.Departments.Find(id);
             if(oldData is null)
             {
                 response.Success = false;
                 return response;
 
             }
-
-
-
-
-
-
 
             _dbContext.Departments.Remove(oldData);
             _dbContext.SaveChanges();
@@ -55,31 +67,28 @@ namespace Infrastructure
         public ResponseModel<Department> Get(int id)
         {
             var response = new ResponseModel<Department>();
-            if (!_dbContext.Employees.Where(d => d.Id == id).Any())
+            if (!_dbContext.Departments.Where(d => d.DepartmentId == id).Any())
             {
-                response = new ResponseModel<Department>()
+                response.Data = null;
+                response.Success = false;
+                response.TotalCount = 0;
+                response.Error = new ErrorModel()
                 {
-                    Data = null,
-                    Success = false,
-                    TotalCount = 0,
-                    Error = null
+                    ErrorCode = StatusCodes.Status404NotFound,
+                    ErrorDescription = "Department with the given Id is not found",
+                    ErrorMessage = "Department with the given Id is not found"
                 };
                 return response;
             }
-
-            response = new ResponseModel<Department>()
-            {
-                Data = new List<Department>()
-                {
-                   _dbContext.Departments.Find(id)
-                },
-                Success = true,
-                TotalCount = 1,
-                Error = null
-            };
-             
-            return response;
-
+            //TODO refactor 
+                Department CurrentDepartment = _dbContext.Departments.FirstOrDefault(x => x.DepartmentId == id);
+                response.Data = new List<Department>();
+                response.Data.Add(CurrentDepartment);
+                response.Success = true;
+                response.TotalCount = response.Data.Count;
+                response.Error = null;
+                return response;
+            
         }
 
         public ResponseModel<Department> GetAll()
@@ -93,22 +102,32 @@ namespace Infrastructure
            };
           
         }
-                public int Update(int id, Department department)
+      public ResponseModel<Department> Update(int id, Department department)
         {
-            Department oldData = Get(id);
+            var response = new ResponseModel<Department>();
+            //TODO
+            Department oldData = _dbContext.Departments.Find(id);
             if (oldData is null)
             {
-                return 0;
+                response.Data = null;
+                response.Error = new ErrorModel()
+                {
+                    ErrorCode = StatusCodes.Status404NotFound,
+                    ErrorDescription = "Department with the given Id is not found",
+                    ErrorMessage = "Department with the given Id is not found"
+                };
+             return  response;
             }
             oldData.DepartmentName = department.DepartmentName;
             _dbContext.Update(oldData);
              _dbContext.SaveChangesAsync();
-            return 1;
-        }
-
-        ResponseModel<Department> IDepartment.Get(int id)
-        {
-            throw new NotImplementedException();
+            Department CurrentDepartment = _dbContext.Departments.FirstOrDefault(x => x.DepartmentId == id);
+            response.Data = new List<Department>();
+            response.Data.Add(CurrentDepartment);
+            response.Success = true;
+            response.TotalCount = response.Data.Count;
+            response.Error = null;
+            return response; 
         }
     }
 }

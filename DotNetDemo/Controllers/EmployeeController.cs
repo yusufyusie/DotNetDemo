@@ -2,7 +2,6 @@
 using DataModel;
 using DataModel.common;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 
@@ -18,7 +17,7 @@ namespace API.Controllers
             _employeeService = employeeService;
         }
         [HttpGet]
-        public List<Employee> Get()
+        public ResponseModel<Employee> Get()
         {
             return _employeeService.GetAll();
         }
@@ -29,7 +28,7 @@ namespace API.Controllers
             return _employeeService.Create(employee);
         }
         [HttpPut]
-        public async Task<bool> Update(int id,Employee employee)
+        public async Task<ResponseModel<Employee>> Update(int id,Employee employee)
         {
             return await _employeeService.Update(id,employee);
         }
