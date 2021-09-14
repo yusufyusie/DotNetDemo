@@ -109,7 +109,7 @@ namespace Infrastructure
         public async Task<Employee> GetEmployeeByDepartment(int departmentId, int employeeId)
         {
             return await _dbContext.Employees.Where(x => x.DepartmentId == departmentId && x.Id == employeeId)
-                .FirstOrDefaultAsync();
+             .Include(x=>x.VDepartment).FirstOrDefaultAsync();
         }
 
         public async Task<List<Employee>> GetEmployeesByDepartment(int companyId)
