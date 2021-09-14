@@ -1,11 +1,11 @@
 ﻿using DataModel;
-using DataModel.Entity;
+using DataModel.DTO;
 using FluentValidation;
 using System.Linq;
 
 namespace Infrastructure.Validators
 {
-    public class EmployeeValidator:AbstractValidator<Employee>
+    public class EmployeeValidator:AbstractValidator<CreateEmployeeDto>
     {
         private readonly EmployeeDbContext _dbcontext;
         public EmployeeValidator(EmployeeDbContext dbContext)
