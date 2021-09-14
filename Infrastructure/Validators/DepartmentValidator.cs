@@ -1,11 +1,12 @@
 ﻿using DataModel;
+using DataModel.Entity;
 using FluentValidation;
 using System;
 using System.Linq;
 
 namespace Infrastructure.Validators
 {
-  public  class DepartmentValidator : AbstractValidator<Department>
+    public  class DepartmentValidator : AbstractValidator<Department>
     {
         private readonly EmployeeDbContext _dbcontext;
         public DepartmentValidator()

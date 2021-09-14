@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataModel.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataModel
 {
-  public  class EmployeeDbContext: DbContext
+    public  class EmployeeDbContext: DbContext
     {
         public EmployeeDbContext(DbContextOptions<EmployeeDbContext> options) : base(options)
         {

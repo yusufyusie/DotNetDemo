@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataModel
+namespace DataModel.Entity
 {
     public class Employee
     {
@@ -10,6 +10,6 @@ namespace DataModel
         public string Gender { get; set; }
         public DateTimeOffset? BirthDate { get; set; }
         public int DepartmentId { get; set; }
-        public virtual Department  Department { get; set; }
+        public virtual Department VDepartment { get; set; }
     }
 }

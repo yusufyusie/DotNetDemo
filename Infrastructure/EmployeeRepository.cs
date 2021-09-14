@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using DataModel;
 using DataModel.common;
+using DataModel.Entity;
 using Infrastructure.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
