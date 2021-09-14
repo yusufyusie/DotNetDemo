@@ -1,6 +1,6 @@
 ﻿using Contracts;
-using DataModel;
 using DataModel.common;
+using DataModel.Entity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

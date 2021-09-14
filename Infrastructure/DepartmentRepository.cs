@@ -1,10 +1,13 @@
 ﻿using Contracts;
 using DataModel;
 using DataModel.common;
+using DataModel.Entity;
 using Infrastructure.Validators;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Infrastructure
 {
@@ -42,7 +45,7 @@ namespace Infrastructure
             return response;
         }
 
-        public ResponseModel<Department> Delete(int id)
+        public  ResponseModel<Department> Delete(int id)
         {
             var response = new ResponseModel<Department>();
             //TODO
@@ -102,10 +105,27 @@ namespace Infrastructure
            };
           
         }
-      public ResponseModel<Department> Update(int id, Department department)
+
+        public async Task<Employee> GetEmployeeByDepartment(int departmentId, int employeeId)
+        {
+            return await _dbContext.Employees.Where(x => x.DepartmentId == departmentId && x.Id == employeeId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Employee>> GetEmployeesByDepartment(int companyId)
+        {
+            return await  _dbContext.Employees
+                .OrderBy(x=>x.Id)
+                .ThenBy(x=>x.FirstName)
+                .Where(de => de.DepartmentId == companyId)
+                .Skip(10)
+                .Take(10)
+                .ToListAsync();
+        }
+
+        public ResponseModel<Department> Update(int id, Department department)
         {
             var response = new ResponseModel<Department>();
-            //TODO
             Department oldData = _dbContext.Departments.Find(id);
             if (oldData is null)
             {

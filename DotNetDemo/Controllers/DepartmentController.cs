@@ -1,11 +1,13 @@
 ﻿using Contracts;
-using DataModel;
 using DataModel.common;
+using DataModel.Entity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/department")]
     [ApiController]
     public class DepartmentController : ControllerBase
     {
@@ -28,7 +30,19 @@ namespace API.Controllers
         {
             return _departmentService.GetAll();
         }
-        
+
+        [HttpGet("{departmentId}/employees")]
+        public async Task<List<Employee>> GetEmployeesByDepartment(int departmentId)
+        {
+            return await _departmentService.GetEmployeesByDepartment(departmentId);
+        }
+
+        [HttpGet("{departmentId}/employee/{employeeId}")]
+        public async Task<Employee> GetEmployeesByDepartment(int departmentId,int employeeId)
+        {
+            return await _departmentService.GetEmployeeByDepartment(departmentId,employeeId);
+        }
+
         [HttpDelete]
         public ResponseModel<Department> Delete(int id)
         {
