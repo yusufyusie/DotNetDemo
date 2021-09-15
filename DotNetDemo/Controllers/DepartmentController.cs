@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using DataModel.common;
 using DataModel.Entity;
+using DataModel.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -32,13 +33,13 @@ namespace API.Controllers
         }
 
         [HttpGet("{departmentId}/employees")]
-        public async Task<List<Employee>> GetEmployeesByDepartment(int departmentId)
+        public async Task<List<EmployeeViewModel>> GetEmployeesByDepartment(int departmentId)
         {
             return await _departmentService.GetEmployeesByDepartment(departmentId);
         }
 
         [HttpGet("{departmentId}/employee/{employeeId}")]
-        public async Task<Employee> GetEmployeesByDepartment(int departmentId,int employeeId)
+        public async Task<EmployeeViewModel> GetEmployeesByDepartment(int departmentId,int employeeId)
         {
             return await _departmentService.GetEmployeeByDepartment(departmentId,employeeId);
         }
