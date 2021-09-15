@@ -113,8 +113,11 @@ namespace Infrastructure
              .Include(x=>x.VDepartment)
              .Select(x=> new EmployeeViewModel()
              {
-                 FirstName= x.FirstName+ " "+ x.LastName, 
-                 LastName= x.LastName, BirthDate= x.BirthDate, Gender= x.Gender, Id= x.Id,
+                 FirstName= x.FirstName, 
+                 LastName= x.LastName,
+                 BirthDate= x.BirthDate,
+                 Gender= x.Gender, 
+                 Id= x.Id,
                  DepartmentName= x.VDepartment.DepartmentName
              }).FirstOrDefaultAsync();
         }
