@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using AutoMapper;
+using Contracts;
 using DataModel;
 using DataModel.common;
 using DataModel.DTO;
@@ -15,16 +16,17 @@ namespace Infrastructure
     {
         private readonly EmployeeDbContext _dbContext;
         private readonly EmployeeValidator _employeeValidator;
+       //  private readonly IMapper _mapper;
         public EmployeeRepository(EmployeeDbContext dbContext)
         {
-            //nnnnn
+            //_mapper = mapper;
             _dbContext = dbContext;
             _employeeValidator = new EmployeeValidator(_dbContext);   
         }
-         public ResponseModel<Employee> Create(CreateEmployeeDto employee)
+         public ResponseModel<Employee> Create(CreateEmployeeDto employeeDto)
         {
             var response = new ResponseModel<Employee>();
-            var result = _employeeValidator.Validate(employee);
+            var result = _employeeValidator.Validate(employeeDto);
             if (!result.IsValid)
            
             {
@@ -37,15 +39,17 @@ namespace Infrastructure
                 };
                 return response;
             }
-            var newEmployee = new Employee() {
-                FirstName = employee.FirstName,
-                LastName = employee.LastName,
-                DepartmentId = employee.DepartmentId,
-                Gender= employee.Gender,
-                BirthDate= employee.BirthDate
+
+            Employee newEmployee = new()
+            {
+                FirstName = employeeDto.FirstName,
+                LastName = employeeDto.LastName,
+                DepartmentId = employeeDto.DepartmentId,
+                Gender = employeeDto.Gender,
+                BirthDate = employeeDto.BirthDate
             };
-           
-           _dbContext.Add(newEmployee);
+
+            _dbContext.Add(newEmployee);
            _dbContext.SaveChanges();
 
             response.Success=true; 
@@ -56,7 +60,6 @@ namespace Infrastructure
             _dbContext.Employees.Find(newEmployee.Id)
             };
             return response;
-
         }
 
         public ResponseModel<Employee> Delete(int id)
@@ -78,8 +81,10 @@ namespace Infrastructure
                 return response;
             }
             var employee = _dbContext.Employees.Find(id);
-            response.Data = new List<Employee>();
-            response.Data.Add(employee);
+            response.Data = new List<Employee>
+            {
+                employee
+            };
             response.Success = true;
             return response;
         }
@@ -145,8 +150,10 @@ namespace Infrastructure
             await _dbContext.SaveChangesAsync();
             var employee= await _dbContext.Employees.FindAsync(id);
             response.Success= true;
-            response.Data = new List<Employee>();
-            response.Data.Add(employee);
+            response.Data = new List<Employee>
+            {
+                employee
+            };
             return response;
         }
     }

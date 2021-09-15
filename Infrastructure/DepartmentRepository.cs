@@ -2,6 +2,7 @@
 using DataModel;
 using DataModel.common;
 using DataModel.Entity;
+using DataModel.ViewModels;
 using Infrastructure.Validators;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -106,21 +107,33 @@ namespace Infrastructure
           
         }
 
-        public async Task<Employee> GetEmployeeByDepartment(int departmentId, int employeeId)
+        public async Task<EmployeeViewModel> GetEmployeeByDepartment(int departmentId, int employeeId)
         {
             return await _dbContext.Employees.Where(x => x.DepartmentId == departmentId && x.Id == employeeId)
-             .Include(x=>x.VDepartment).FirstOrDefaultAsync();
+             .Include(x=>x.VDepartment)
+             .Select(x=> new EmployeeViewModel()
+             {
+                 FirstName= x.FirstName+ " "+ x.LastName, 
+                 LastName= x.LastName, BirthDate= x.BirthDate, Gender= x.Gender, Id= x.Id,
+                 DepartmentName= x.VDepartment.DepartmentName
+             }).FirstOrDefaultAsync();
         }
 
-        public async Task<List<Employee>> GetEmployeesByDepartment(int companyId)
+        public async Task<List<EmployeeViewModel>> GetEmployeesByDepartment(int deptId)
         {
-            return await  _dbContext.Employees
-                .OrderBy(x=>x.Id)
-                .ThenBy(x=>x.FirstName)
-                .Where(de => de.DepartmentId == companyId)
-                .Skip(10)
-                .Take(10)
-                .ToListAsync();
+           return await _dbContext.Employees.Where(x => x.DepartmentId == deptId)
+                .Include(x => x.VDepartment)
+                .Select(x => new EmployeeViewModel()
+                    {
+                                BirthDate= x.BirthDate,
+                                Id= x.Id,
+                                FirstName= x.FirstName,
+                                LastName= x.LastName,
+                                Gender= x.Gender, 
+                                DepartmentName= x.VDepartment.DepartmentName
+                    }).ToListAsync();
+
+
         }
 
         public ResponseModel<Department> Update(int id, Department department)

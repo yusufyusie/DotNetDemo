@@ -1,5 +1,6 @@
 ﻿using DataModel.common;
 using DataModel.Entity;
+using DataModel.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,8 +14,8 @@ namespace Contracts
         public ResponseModel<Department> GetAll();
         public ResponseModel<Department> Get(int id);  
         public ResponseModel<Department> Delete(int id);
-        public Task<List<Employee>> GetEmployeesByDepartment(int departmentId);
-        public Task<Employee> GetEmployeeByDepartment(int departmentId, int employeeId);
+        public Task<List<EmployeeViewModel>> GetEmployeesByDepartment(int departmentId);
+        public Task<EmployeeViewModel> GetEmployeeByDepartment(int departmentId, int employeeId);
        
     }
 }
